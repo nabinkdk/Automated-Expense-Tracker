@@ -4,6 +4,9 @@ class Expense:
         self.title = title
         self.expense = expense
 
+
 class ExpenseTracker:
     def __init__(self):
-        self.expenses=[]
+        self.expenses = []
+    
+    
