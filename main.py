@@ -28,4 +28,7 @@ class ExpenseTracker:
                 print(
                     f"{i}. Date:{expense.date}, Title:{expense.title}, Amount:{expense.expense}"
                 )
-    
+
+    def total_expense(self):
+        total = sum(amt.expense for amt in self.expenses)
+        print(f"Total Expenses: ${total:.2f}")
