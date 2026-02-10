@@ -11,6 +11,7 @@ class ExpenseTracker:
 
     def add_expense(self, expense):
         self.expenses.append(expense)
+        print("Added Successfully !")
 
     def remove_expense(self, index):
         if index >= 0 and index < len(self.expenses):
@@ -26,7 +27,7 @@ class ExpenseTracker:
             print("Expense List:")
             for i, expense in enumerate(self.expenses, start=1):
                 print(
-                    f"{i}. Date:{expense.date}, Title:{expense.title}, Amount:{expense.expense}"
+                    f"{i}. Date:{expense.date}, Title:{expense.title}, Amount:${expense.expense}"
                 )
 
     def total_expense(self):
