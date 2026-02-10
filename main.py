@@ -8,35 +8,52 @@ class Expense:
 class ExpenseTracker:
     def __init__(self):
         self.expenses = []
+        self.load_expenses()
 
     def add_expense(self, expense):
         self.expenses.append(expense)
-        print("Added Successfully !")
+        with open("expense.txt", "a") as f:
+            f.write(f"{expense.date},{expense.title},{expense.expense}\n")
+        print("Added Successfully!")
 
-    def remove_expense(self, index):
-        if index >= 0 and index < len(self.expenses):
-            del self.expenses[index]
-            print("Expense removed Successfully")
-        else:
-            print("Invalid expense index.")
+    def load_expenses(self):
+        try:
+            with open("expense.txt", "r") as f:
+                for line in f:
+                    date, title, amt = line.strip().split(",")
+                    self.expenses.append(Expense(date, title, float(amt)))
+        except FileNotFoundError:
+            pass
 
     def view_expense(self):
-        if len(self.expenses) == 0:
-            print("No expenses Found !")
+        if not self.expenses:
+            print("No expenses Found!")
+            return
+
+        for i, e in enumerate(self.expenses, start=1):
+            print(f"{i}. Date:{e.date}, Title:{e.title}, Amount:${e.expense}")
+
+    def remove_expense(self, index):
+        if 0 <= index < len(self.expenses):
+            del self.expenses[index]
+            self.save_all()
+            print("Expense removed Successfully")
         else:
-            print("Expense List:")
-            for i, expense in enumerate(self.expenses, start=1):
-                print(
-                    f"{i}. Date:{expense.date}, Title:{expense.title}, Amount:${expense.expense}"
-                )
+            print("Invalid expense index")
+
+    def save_all(self):
+        with open("expense.txt", "w") as f:
+            for e in self.expenses:
+                f.write(f"{e.date},{e.title},{e.expense}\n")
 
     def total_expense(self):
-        total = sum(amt.expense for amt in self.expenses)
+        total = sum(e.expense for e in self.expenses)
         print(f"Total Expenses: ${total:.2f}")
 
 
 def main():
     tracker = ExpenseTracker()
+
     while True:
         print("\nExpense Tracker Menu:")
         print("1. Add Expenses")
@@ -45,24 +62,28 @@ def main():
         print("4. Total Expenses")
         print("5. Exit")
 
-        choice = int(input("Enter a choice(1-5):\t"))
-        if choice == 1:
-            date = input("Enter the date (YYYY-MM-DD): ")
-            title = input("Enter a Title: ")
-            amt = float(input("Enter the amount: "))
-            expense = Expense(date, title, amt)
-            tracker.add_expense(expense)
-        elif choice == 2:
-            index = int(input("Enter a index to remove"))
+        choice = input("Enter choice (1-5): ")
+
+        if choice == "1":
+            date = input("Enter date (YYYY-MM-DD): ")
+            title = input("Enter title: ")
+            amt = float(input("Enter amount: "))
+            tracker.add_expense(Expense(date, title, amt))
+
+        elif choice == "2":
+            index = int(input("Enter index to remove: "))
             tracker.remove_expense(index - 1)
 
-        elif choice == 3:
+        elif choice == "3":
             tracker.view_expense()
-        elif choice == 4:
+
+        elif choice == "4":
             tracker.total_expense()
-        elif choice == 5:
-            print("Exiting .....!")
+
+        elif choice == "5":
+            print("Exiting...")
             break
+
         else:
             print("Invalid choice")
 
